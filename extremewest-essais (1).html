@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Essais Moto — Portes Ouvertes Extrême West</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --vert: #82BB37;
+    --vert-dark: #5e8a28;
+    --vert-light: #a0d455;
+    --noir: #0a0a0a;
+    --gris-fonce: #111111;
+    --gris-mid: #191919;
+    --gris-clair: #252525;
+    --blanc: #f5f5f5;
+    --texte: #cccccc;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--noir); color: var(--texte); font-family: 'Barlow', sans-serif; font-weight: 300; min-height: 100vh; overflow-x: hidden; }
+
+  header { background: var(--gris-fonce); border-bottom: 3px solid var(--vert); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 80px; z-index: 100; position: relative; }
+  .logo-zone { display: flex; align-items: center; gap: 18px; }
+  .logo-icon { width: 50px; height: 50px; }
+  .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 1.65rem; letter-spacing: 0.08em; color: var(--blanc); line-height: 1.1; }
+  .logo-sub { font-size: 0.62rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--vert); }
+  .admin-btn { background: none; border: 1px solid #333; color: var(--texte); font-family: 'Barlow', sans-serif; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; padding: 8px 18px; cursor: pointer; transition: all 0.2s; }
+  .admin-btn:hover { border-color: var(--vert); color: var(--vert); }
+
+  .hero { position: relative; background: linear-gradient(135deg, #080a04 0%, #0f1a04 50%, #080a04 100%); padding: 64px 40px 52px; text-align: center; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 700px; height: 700px; background: radial-gradient(circle, rgba(130,187,55,0.1) 0%, transparent 68%); pointer-events: none; }
+  .hero-tag { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--vert); border: 1px solid var(--vert); padding: 5px 16px; margin-bottom: 22px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem, 8vw, 6.5rem); letter-spacing: 0.05em; color: var(--blanc); line-height: 0.92; margin-bottom: 18px; }
+  .hero h1 span { color: var(--vert); }
+  .hero-info { font-size: 0.85rem; letter-spacing: 0.1em; color: #888; }
+
+  .slots-banner { display: flex; justify-content: center; margin: 40px 40px 0; flex-wrap: wrap; }
+  .slot-card { flex: 1; min-width: 280px; max-width: 440px; background: var(--gris-fonce); border: 1px solid #282828; padding: 28px 34px; cursor: pointer; transition: all 0.25s; }
+  .slot-card:first-child { border-right: none; }
+  .slot-card.active-slot { border-color: var(--vert); background: #0c120a; }
+  .slot-card:hover { background: #0e1509; border-color: var(--vert); }
+  .slot-period { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.1em; color: var(--vert); margin-bottom: 14px; }
+  .slot-timeline { display: flex; flex-direction: column; gap: 8px; }
+  .slot-step { display: flex; align-items: center; gap: 14px; font-size: 0.82rem; }
+  .slot-time { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; color: var(--vert-light); min-width: 52px; }
+  .slot-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--vert); flex-shrink: 0; }
+
+  .main-content { display: grid; grid-template-columns: 1fr 370px; gap: 0; margin: 40px; min-height: 600px; }
+  .motos-panel { background: var(--gris-fonce); border: 1px solid #282828; border-right: none; }
+  .panel-header { padding: 18px 28px; border-bottom: 1px solid #282828; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.4rem; letter-spacing: 0.1em; color: var(--blanc); }
+  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; padding: 14px 28px; border-bottom: 1px solid #282828; }
+  .filter-btn { background: none; border: 1px solid #333; color: var(--texte); font-family: 'Barlow', sans-serif; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 12px; cursor: pointer; transition: all 0.2s; }
+  .filter-btn.active, .filter-btn:hover { background: var(--vert); border-color: var(--vert); color: #fff; }
+
+  .motos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1px; background: #222; }
+  .moto-card { background: var(--gris-fonce); padding: 16px 20px; cursor: pointer; transition: all 0.2s; border-left: 3px solid transparent; }
+  .moto-card:hover { background: #181f10; border-left-color: var(--vert); }
+  .moto-card.selected { background: #0e180a; border-left-color: var(--vert); }
+  .moto-marque { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--vert); margin-bottom: 3px; }
+  .moto-modele { font-family: 'Bebas Neue', sans-serif; font-size: 1.15rem; letter-spacing: 0.04em; color: var(--blanc); margin-bottom: 8px; line-height: 1.1; }
+  .dispo-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+  .badge { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 7px; border-radius: 2px; }
+  .badge-dispo { background: rgba(130,187,55,0.12); color: var(--vert-light); border: 1px solid rgba(130,187,55,0.3); }
+  .badge-complet { background: rgba(220,50,50,0.1); color: #e06060; border: 1px solid rgba(220,50,50,0.25); }
+  .badge-a2 { background: rgba(255,200,0,0.1); color: #f0c030; border: 1px solid rgba(255,200,0,0.25); }
+
+  .form-panel { background: var(--gris-mid); border: 1px solid #282828; display: flex; flex-direction: column; }
+  .form-body { padding: 22px; flex: 1; overflow-y: auto; }
+  .form-section-title { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase; color: var(--vert); margin-bottom: 12px; margin-top: 20px; padding-bottom: 5px; border-bottom: 1px solid #2e2e2e; }
+  .form-section-title:first-child { margin-top: 0; }
+
+  .selected-summary { background: var(--gris-clair); border-left: 3px solid var(--vert); padding: 12px 16px; font-size: 0.8rem; }
+  .selected-summary.empty { color: #484848; border-left-color: #2e2e2e; font-style: italic; font-size: 0.76rem; }
+  .selected-moto-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; color: var(--blanc); letter-spacing: 0.04em; }
+
+  .creneau-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+  .creneau-btn { background: var(--gris-clair); border: 1px solid #333; color: var(--texte); font-family: 'Barlow', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 12px 6px; cursor: pointer; transition: all 0.2s; text-align: center; line-height: 1.6; }
+  .creneau-btn:hover:not(:disabled) { border-color: var(--vert); color: var(--blanc); }
+  .creneau-btn.selected { background: var(--vert); border-color: var(--vert); color: #fff; }
+  .creneau-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  .field { margin-bottom: 11px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 11px; }
+  label { display: block; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #666; margin-bottom: 5px; }
+  input, select { width: 100%; background: var(--gris-clair); border: 1px solid #333; color: var(--blanc); font-family: 'Barlow', sans-serif; font-size: 0.85rem; padding: 9px 13px; outline: none; transition: border-color 0.2s; appearance: none; }
+  input:focus, select:focus { border-color: var(--vert); }
+  input::placeholder { color: #3e3e3e; }
+  select option { background: #222; }
+
+  .submit-btn { width: 100%; background: var(--vert); border: none; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.15em; padding: 15px; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
+  .submit-btn:hover:not(:disabled) { background: var(--vert-light); transform: translateY(-1px); }
+  .submit-btn:disabled { background: #333; cursor: not-allowed; transform: none; opacity: 0.6; }
+
+  .loading-bar { display: none; height: 3px; background: var(--gris-clair); margin-top: 8px; overflow: hidden; }
+  .loading-bar.active { display: block; }
+  .loading-bar::after { content: ''; display: block; height: 100%; width: 40%; background: var(--vert); animation: slide 1s infinite; }
+  @keyframes slide { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }
+
+  .toast { position: fixed; bottom: 30px; right: 30px; background: var(--gris-fonce); border-left: 4px solid var(--vert); padding: 14px 22px; font-size: 0.85rem; font-weight: 600; color: var(--blanc); z-index: 999; transform: translateX(150%); transition: transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275); max-width: 360px; box-shadow: 0 8px 32px rgba(0,0,0,0.6); }
+  .toast.show { transform: translateX(0); }
+  .toast.success { border-left-color: var(--vert); }
+  .toast.error { border-left-color: #e05050; }
+
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 200; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .overlay.open { opacity: 1; pointer-events: all; }
+  .modal { background: var(--gris-fonce); border: 1px solid #2a2a2a; border-top: 3px solid var(--vert); padding: 36px; width: 90%; max-width: 1100px; max-height: 90vh; overflow-y: auto; transform: translateY(20px); transition: transform 0.3s; position: relative; }
+  .overlay.open .modal { transform: translateY(0); }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 0.08em; color: var(--blanc); margin-bottom: 24px; }
+  .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; color: #666; font-size: 1.5rem; cursor: pointer; transition: color 0.2s; }
+  .modal-close:hover { color: var(--blanc); }
+
+  .admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-box { background: var(--gris-clair); padding: 18px 20px; border-left: 3px solid var(--vert); }
+  .stat-val { font-family: 'Bebas Neue', sans-serif; font-size: 2.4rem; color: var(--blanc); }
+  .stat-lbl { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #555; margin-top: 2px; }
+
+  .admin-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 16px; }
+  .admin-toolbar > span { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: #555; font-weight: 700; }
+  .export-btn { background: none; border: 1px solid var(--vert); color: var(--vert); font-family: 'Barlow', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 14px; cursor: pointer; margin-left: auto; transition: all 0.2s; }
+  .export-btn:hover { background: var(--vert); color: #fff; }
+  .refresh-btn { background: none; border: 1px solid #333; color: #888; font-family: 'Barlow', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 6px 14px; cursor: pointer; transition: all 0.2s; }
+  .refresh-btn:hover { border-color: var(--vert); color: var(--vert); }
+
+  .admin-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+  .admin-table th { background: var(--gris-clair); color: var(--vert); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; font-size: 0.58rem; padding: 10px 12px; text-align: left; border-bottom: 1px solid #333; }
+  .admin-table td { padding: 9px 12px; border-bottom: 1px solid #222; color: var(--texte); }
+  .admin-table tr:hover td { background: #1a1a1a; }
+  .del-btn { background: none; border: 1px solid #3a3a3a; color: #e05050; font-size: 0.62rem; padding: 3px 9px; cursor: pointer; font-family: 'Barlow', sans-serif; font-weight: 600; transition: all 0.2s; }
+  .del-btn:hover { background: rgba(220,50,50,0.12); border-color: #e05050; }
+  .no-resa { text-align: center; padding: 44px; color: #3a3a3a; font-style: italic; }
+
+  .db-status { display: flex; align-items: center; gap: 6px; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; }
+  .db-dot { width: 7px; height: 7px; border-radius: 50%; background: #555; }
+  .db-dot.online { background: var(--vert); box-shadow: 0 0 6px var(--vert); }
+  .db-dot.offline { background: #e05050; }
+
+  @media(max-width:900px) {
+    .main-content { grid-template-columns: 1fr; margin: 20px; }
+    .form-panel { border: 1px solid #282828; }
+    .motos-panel { border-right: 1px solid #282828; border-bottom: none; }
+    .slots-banner { margin: 20px; }
+    header { padding: 0 20px; }
+    .admin-stats { grid-template-columns: 1fr 1fr; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-zone">
+    <svg class="logo-icon" viewBox="0 0 50 50" fill="none">
+      <circle cx="25" cy="25" r="24" stroke="#82BB37" stroke-width="2"/>
+      <path d="M8 30 Q15 20 25 23 Q35 26 42 21" stroke="#82BB37" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="13" cy="32" r="5.5" stroke="#f5f5f5" stroke-width="2" fill="none"/>
+      <circle cx="37" cy="32" r="5.5" stroke="#f5f5f5" stroke-width="2" fill="none"/>
+      <path d="M18.5 32 L31.5 32" stroke="#444" stroke-width="1.5"/>
+      <circle cx="13" cy="32" r="2" fill="#82BB37"/>
+      <circle cx="37" cy="32" r="2" fill="#82BB37"/>
+    </svg>
+    <div>
+      <div class="logo-text">EXTRÊME WEST</div>
+      <div class="logo-sub">Portes Ouvertes · Montargis · Essais Moto</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="db-status"><div class="db-dot" id="db-dot"></div><span id="db-label" style="color:#555">Connexion...</span></div>
+    <button class="admin-btn" onclick="openAdmin()">⚙ Administration</button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-tag">Montargis · Journée Portes Ouvertes</div>
+  <h1>RÉSERVEZ<br>VOTRE <span>ESSAI</span></h1>
+  <p class="hero-info">Choisissez votre moto et votre créneau · Places limitées</p>
+</div>
+
+<div class="slots-banner">
+  <div class="slot-card active-slot" id="card-matin" onclick="selectSlotCard('matin')">
+    <div class="slot-period">☀ MATIN</div>
+    <div class="slot-timeline">
+      <div class="slot-step"><div class="slot-dot"></div><span class="slot-time">09:00</span><span>Accueil & café</span></div>
+      <div class="slot-step"><div class="slot-dot"></div><span class="slot-time">09:45</span><span>Départ balade</span></div>
+      <div class="slot-step"><div class="slot-dot"></div><span class="slot-time">11:00</span><span>Retour en magasin</span></div>
+    </div>
+  </div>
+  <div class="slot-card" id="card-aprem" onclick="selectSlotCard('aprem')">
+    <div class="slot-period">🌤 APRÈS-MIDI</div>
+    <div class="slot-timeline">
+      <div class="slot-step"><div class="slot-dot"></div><span class="slot-time">14:00</span><span>Accueil & café</span></div>
+      <div class="slot-step"><div class="slot-dot"></div><span class="slot-time">14:45</span><span>Départ balade</span></div>
+      <div class="slot-step"><div class="slot-dot"></div><span class="slot-time">16:00</span><span>Retour en magasin</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="motos-panel">
+    <div class="panel-header">
+      <span class="panel-title">Choisissez votre moto</span>
+      <span style="font-size:0.68rem;color:#484848" id="count-label"></span>
+    </div>
+    <div class="filter-row" id="filter-row"></div>
+    <div class="motos-grid" id="motos-grid"></div>
+  </div>
+
+  <div class="form-panel">
+    <div class="panel-header" style="background:var(--gris-fonce)">
+      <span class="panel-title">Votre réservation</span>
+    </div>
+    <div class="form-body">
+      <div class="form-section-title">Créneau souhaité</div>
+      <div class="creneau-choice">
+        <button class="creneau-btn selected" id="btn-matin" onclick="selectCreneau('matin')">☀ Matin<br><small style="font-size:0.55rem;opacity:0.7">09h00 → 11h00</small></button>
+        <button class="creneau-btn" id="btn-aprem" onclick="selectCreneau('aprem')">🌤 Après-midi<br><small style="font-size:0.55rem;opacity:0.7">14h00 → 16h00</small></button>
+      </div>
+      <div class="form-section-title">Moto sélectionnée</div>
+      <div class="selected-summary empty" id="selected-summary">← Cliquez sur une moto pour la sélectionner</div>
+      <div class="form-section-title">Vos coordonnées</div>
+      <div class="field-row">
+        <div class="field"><label>Prénom</label><input type="text" id="f-prenom" placeholder="Prénom"></div>
+        <div class="field"><label>Nom</label><input type="text" id="f-nom" placeholder="Nom"></div>
+      </div>
+      <div class="field"><label>Téléphone</label><input type="tel" id="f-tel" placeholder="06 XX XX XX XX"></div>
+      <div class="field"><label>Email</label><input type="email" id="f-email" placeholder="votre@email.fr"></div>
+      <div class="form-section-title">Permis de conduire</div>
+      <div class="field">
+        <label>Catégorie du permis</label>
+        <select id="f-permis">
+          <option value="" disabled selected>Sélectionnez votre catégorie</option>
+          <option value="A1">A1 — Moto légère (jusqu'à 125cc)</option>
+          <option value="A2">A2 — Puissance limitée (35 kW)</option>
+          <option value="A">A — Permis moto sans restriction</option>
+          <option value="B">B + formation — Accès 125cc</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Date d'obtention du permis</label>
+        <input type="date" id="f-date-permis">
+      </div>
+      <button class="submit-btn" id="submit-btn" onclick="submitReservation()">CONFIRMER LA RÉSERVATION</button>
+      <div class="loading-bar" id="loading-bar"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div class="overlay" id="overlay-login">
+  <div class="modal" style="max-width:340px">
+    <button class="modal-close" onclick="closeOverlays()">✕</button>
+    <div class="modal-title">Administration</div>
+    <div style="max-width:280px;margin:0 auto">
+      <div class="field"><label>Mot de passe</label><input type="password" id="admin-pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter')loginAdmin()"></div>
+      <button class="submit-btn" onclick="loginAdmin()">ACCÉDER</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="overlay" id="overlay-admin">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlays()">✕</button>
+    <div class="modal-title">Tableau de bord — Réservations</div>
+    <div class="admin-stats" id="admin-stats"></div>
+    <div class="admin-toolbar">
+      <span>Filtrer :</span>
+      <button class="filter-btn active" onclick="filterAdmin('all',this)">Toutes</button>
+      <button class="filter-btn" onclick="filterAdmin('matin',this)">☀ Matin</button>
+      <button class="filter-btn" onclick="filterAdmin('aprem',this)">🌤 Après-midi</button>
+      <button class="refresh-btn" onclick="refreshAdmin()">↻ Actualiser</button>
+      <button class="export-btn" onclick="exportCSV()">⬇ Exporter CSV</button>
+    </div>
+    <div id="admin-table-wrap"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+//  SUPABASE CONFIG
+// ═══════════════════════════════════
+const SUPABASE_URL = 'https://pspmnfftsqmratmzhgat.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzcG1uZmZ0c3FtcmF0bXpoZ2F0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMyNDU3ODQsImV4cCI6MjA4ODgyMTc4NH0.z3lISnHaqcGFCBcrb2aSAtdlRzAiRszj247tM9tE5EQ';
+
+const headers = {
+  'Content-Type': 'application/json',
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY
+};
+
+async function dbGet() {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/reservations?select=*&order=id.asc`, { headers });
+  if (!r.ok) throw new Error('Erreur lecture');
+  return r.json();
+}
+
+async function dbInsert(data) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/reservations`, {
+    method: 'POST',
+    headers: { ...headers, 'Prefer': 'return=minimal' },
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) { const e = await r.text(); throw new Error(e); }
+}
+
+async function dbDelete(id) {
+  const r = await fetch(`${SUPABASE_URL}/rest/v1/reservations?id=eq.${id}`, {
+    method: 'DELETE', headers
+  });
+  if (!r.ok) throw new Error('Erreur suppression');
+}
+
+// ═══════════════════════════════════
+//  MOTOS
+// ═══════════════════════════════════
+const MOTOS = [
+  { id:'m01', marque:'KAWASAKI', modele:'Z 1100 2026',         a2:false },
+  { id:'m02', marque:'KAWASAKI', modele:'Z 900 70KW 2026',     a2:true  },
+  { id:'m03', marque:'KAWASAKI', modele:'NINJA ZX-4RR 2026',   a2:false },
+  { id:'m04', marque:'KAWASAKI', modele:'Z 7 HYBRID',          a2:false },
+  { id:'m05', marque:'KAWASAKI', modele:'VERSYS 1100 S 2026',  a2:false },
+  { id:'m06', marque:'KAWASAKI', modele:'NINJA H2 SX 2025',    a2:false },
+  { id:'m07', marque:'KAWASAKI', modele:'Z 900 RS 2026 70KW',  a2:true  },
+  { id:'m08', marque:'KAWASAKI', modele:'VERSYS 650 2026',     a2:true  },
+  { id:'m09', marque:'KAWASAKI', modele:'Z 500 2025',          a2:true  },
+  { id:'m10', marque:'BRIXTON',  modele:'CROSSFIRE 500 ABS',   a2:false },
+  { id:'m11', marque:'KAWASAKI', modele:'Z 650 S 2026',        a2:false },
+  { id:'m12', marque:'BRIXTON',  modele:'CROMWELL 1200 ABS',   a2:false },
+  { id:'m13', marque:'KAWASAKI', modele:'Z 900 2026',          a2:false },
+  { id:'m14', marque:'KAWASAKI', modele:'NINJA 1100 SX 2025',  a2:false },
+  { id:'m15', marque:'KAWASAKI', modele:'Z E-1',               a2:false },
+  { id:'m16', marque:'RIEJU',    modele:'NKD 125 BLANCA',      a2:false },
+  { id:'m17', marque:'KAWASAKI', modele:'Z 125 2026',          a2:false },
+  { id:'m18', marque:'KAWASAKI', modele:'KLE 500',             a2:true  },
+];
+
+const ADMIN_PASSWORD = 'extremeouest2024';
+
+let reservations = [];
+let selectedMoto = null;
+let selectedCreneau = 'matin';
+let adminFilter = 'all';
+
+// ═══════════════════════════════════
+//  INIT — chargement depuis Supabase
+// ═══════════════════════════════════
+async function init() {
+  try {
+    reservations = await dbGet();
+    setDbStatus(true);
+  } catch(e) {
+    setDbStatus(false);
+    showToast('⚠ Impossible de se connecter à la base de données', 'error');
+  }
+  renderFilters();
+  renderMotos();
+}
+
+function setDbStatus(online) {
+  const dot = document.getElementById('db-dot');
+  const lbl = document.getElementById('db-label');
+  dot.className = 'db-dot ' + (online ? 'online' : 'offline');
+  lbl.textContent = online ? 'En ligne' : 'Hors ligne';
+  lbl.style.color = online ? 'var(--vert)' : '#e05050';
+}
+
+function isReserved(id, c) {
+  return reservations.some(r => r.moto_id === id && r.creneau === c);
+}
+
+// ═══════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  setTimeout(() => { t.className = 'toast'; }, 4500);
+}
+
+// ═══════════════════════════════════
+//  RENDU MOTOS
+// ═══════════════════════════════════
+function getMarques() { return [...new Set(MOTOS.map(m => m.marque))].sort(); }
+
+function renderFilters() {
+  const row = document.getElementById('filter-row');
+  row.innerHTML = `<button class="filter-btn active" onclick="filterMotos('',this)">Toutes (${MOTOS.length})</button>`;
+  getMarques().forEach(m => {
+    const c = MOTOS.filter(x => x.marque === m).length;
+    row.innerHTML += `<button class="filter-btn" onclick="filterMotos('${m}',this)">${m} (${c})</button>`;
+  });
+}
+
+function filterMotos(marque, btn) {
+  document.querySelectorAll('#filter-row .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMotos(marque);
+}
+
+function renderMotos(filterMarque = '') {
+  const grid = document.getElementById('motos-grid');
+  const list = filterMarque ? MOTOS.filter(m => m.marque === filterMarque) : MOTOS;
+  const dispoCount = list.filter(m => !isReserved(m.id,'matin') || !isReserved(m.id,'aprem')).length;
+  document.getElementById('count-label').textContent = `${dispoCount}/${list.length} avec créneau disponible`;
+  grid.innerHTML = '';
+  list.forEach(m => {
+    const rm = isReserved(m.id,'matin'), ra = isReserved(m.id,'aprem');
+    const sel = selectedMoto && selectedMoto.id === m.id;
+    grid.innerHTML += `
+      <div class="moto-card${sel?' selected':''}" onclick="selectMoto('${m.id}')">
+        <div class="moto-marque">${m.marque}</div>
+        <div class="moto-modele">${m.modele}</div>
+        <div class="dispo-badges">
+          ${m.a2?'<span class="badge badge-a2">A2</span>':''}
+          <span class="badge ${rm?'badge-complet':'badge-dispo'}">${rm?'✗ Matin':'✓ Matin'}</span>
+          <span class="badge ${ra?'badge-complet':'badge-dispo'}">${ra?'✗ Aprèm':'✓ Aprèm'}</span>
+        </div>
+      </div>`;
+  });
+}
+
+function selectMoto(id) {
+  selectedMoto = MOTOS.find(m => m.id === id);
+  updateSelectedSummary();
+  updateCreneauBtns();
+  const active = document.querySelector('#filter-row .filter-btn.active');
+  const label = active ? active.textContent : '';
+  renderMotos(label.includes('Toutes') ? '' : label.split(' (')[0]);
+}
+
+function updateSelectedSummary() {
+  const div = document.getElementById('selected-summary');
+  if (!selectedMoto) { div.className='selected-summary empty'; div.innerHTML='← Cliquez sur une moto pour la sélectionner'; return; }
+  div.className='selected-summary';
+  div.innerHTML=`<div class="moto-marque">${selectedMoto.marque}</div><div class="selected-moto-name">${selectedMoto.modele}</div>${selectedMoto.a2?'<span class="badge badge-a2" style="margin-top:6px;display:inline-block">Accessible A2</span>':''}`;
+}
+
+function selectSlotCard(c) {
+  selectedCreneau = c;
+  ['matin','aprem'].forEach(x => {
+    document.getElementById('card-'+x).classList.toggle('active-slot', x===c);
+    document.getElementById('btn-'+x).classList.toggle('selected', x===c);
+  });
+  updateCreneauBtns();
+}
+function selectCreneau(c) { selectSlotCard(c); }
+
+function updateCreneauBtns() {
+  if (!selectedMoto) return;
+  const bm = document.getElementById('btn-matin'), ba = document.getElementById('btn-aprem');
+  bm.disabled = isReserved(selectedMoto.id,'matin');
+  ba.disabled = isReserved(selectedMoto.id,'aprem');
+  if (selectedCreneau==='matin' && bm.disabled && !ba.disabled) selectSlotCard('aprem');
+  if (selectedCreneau==='aprem' && ba.disabled && !bm.disabled) selectSlotCard('matin');
+}
+
+// ═══════════════════════════════════
+//  RÉSERVATION
+// ═══════════════════════════════════
+async function submitReservation() {
+  if (!selectedMoto) { showToast('⚠ Veuillez sélectionner une moto','error'); return; }
+  const prenom     = document.getElementById('f-prenom').value.trim();
+  const nom        = document.getElementById('f-nom').value.trim();
+  const tel        = document.getElementById('f-tel').value.trim();
+  const email      = document.getElementById('f-email').value.trim();
+  const permis     = document.getElementById('f-permis').value;
+  const datePermis = document.getElementById('f-date-permis').value;
+
+  if (!prenom||!nom||!tel||!email||!permis||!datePermis) {
+    showToast('⚠ Merci de remplir tous les champs','error'); return;
+  }
+  if (isReserved(selectedMoto.id, selectedCreneau)) {
+    showToast('⚠ Ce créneau est déjà pris pour cette moto !','error'); return;
+  }
+  if (!selectedMoto.a2 && permis === 'A2') {
+    showToast('⚠ Cette moto nécessite un permis A','error'); return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  const bar = document.getElementById('loading-bar');
+  btn.disabled = true; bar.classList.add('active');
+
+  try {
+    await dbInsert({
+      moto_id:     selectedMoto.id,
+      moto_label:  `${selectedMoto.marque} ${selectedMoto.modele}`,
+      creneau:     selectedCreneau,
+      prenom, nom, tel, email,
+      permis,
+      date_permis: datePermis
+    });
+    // Recharger depuis la base
+    reservations = await dbGet();
+    const lbl = selectedCreneau==='matin'?'Matin (09h–11h)':'Après-midi (14h–16h)';
+    showToast(`✓ Réservé ! ${selectedMoto.modele} — ${lbl}`,'success');
+    selectedMoto = null;
+    ['f-prenom','f-nom','f-tel','f-email','f-date-permis'].forEach(id => document.getElementById(id).value='');
+    document.getElementById('f-permis').value='';
+    document.getElementById('btn-matin').disabled=false;
+    document.getElementById('btn-aprem').disabled=false;
+    updateSelectedSummary();
+    renderMotos();
+  } catch(e) {
+    showToast('⚠ Erreur lors de la réservation. Réessayez.','error');
+  } finally {
+    btn.disabled = false; bar.classList.remove('active');
+  }
+}
+
+// ═══════════════════════════════════
+//  ADMIN
+// ═══════════════════════════════════
+function openAdmin() {
+  document.getElementById('overlay-login').classList.add('open');
+  setTimeout(() => document.getElementById('admin-pwd').focus(), 300);
+}
+
+function loginAdmin() {
+  if (document.getElementById('admin-pwd').value !== ADMIN_PASSWORD) { showToast('Mot de passe incorrect','error'); return; }
+  document.getElementById('admin-pwd').value='';
+  document.getElementById('overlay-login').classList.remove('open');
+  renderAdmin();
+  document.getElementById('overlay-admin').classList.add('open');
+}
+
+function closeOverlays() { document.querySelectorAll('.overlay').forEach(o=>o.classList.remove('open')); }
+
+function filterAdmin(f, btn) {
+  adminFilter = f;
+  document.querySelectorAll('#overlay-admin .filter-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAdminTable();
+}
+
+async function refreshAdmin() {
+  try {
+    reservations = await dbGet();
+    renderAdmin();
+    showToast('✓ Données actualisées','success');
+  } catch(e) {
+    showToast('⚠ Erreur actualisation','error');
+  }
+}
+
+function renderAdmin() {
+  const total=reservations.length, matin=reservations.filter(r=>r.creneau==='matin').length, aprem=reservations.filter(r=>r.creneau==='aprem').length;
+  document.getElementById('admin-stats').innerHTML=`
+    <div class="stat-box"><div class="stat-val">${total}</div><div class="stat-lbl">Total réservations</div></div>
+    <div class="stat-box"><div class="stat-val">${matin}</div><div class="stat-lbl">Créneau matin</div></div>
+    <div class="stat-box"><div class="stat-val">${aprem}</div><div class="stat-lbl">Créneau après-midi</div></div>`;
+  renderAdminTable();
+}
+
+function renderAdminTable() {
+  const list = adminFilter==='all'?reservations:reservations.filter(r=>r.creneau===adminFilter);
+  const wrap = document.getElementById('admin-table-wrap');
+  if(!list.length){wrap.innerHTML='<div class="no-resa">Aucune réservation pour le moment.</div>';return;}
+  wrap.innerHTML=`<table class="admin-table"><thead><tr>
+    <th>#</th><th>Moto</th><th>Créneau</th><th>Prénom</th><th>Nom</th>
+    <th>Téléphone</th><th>Email</th><th>Permis</th><th>Date permis</th><th>Enregistré le</th><th></th>
+  </tr></thead><tbody>
+    ${list.map((r,i)=>`<tr>
+      <td style="color:#484848">${i+1}</td>
+      <td style="color:var(--blanc);font-weight:600">${r.moto_label}</td>
+      <td><span class="badge ${r.creneau==='matin'?'badge-dispo':'badge-a2'}">${r.creneau==='matin'?'☀ Matin':'🌤 Après-midi'}</span></td>
+      <td>${r.prenom}</td><td>${r.nom}</td><td>${r.tel}</td><td>${r.email}</td>
+      <td><span class="badge badge-a2">${r.permis||'—'}</span></td>
+      <td style="color:#555;font-size:0.68rem">${r.date_permis ? new Date(r.date_permis).toLocaleDateString('fr-FR') : '—'}</td>
+      <td style="color:#484848;font-size:0.65rem">${new Date(r.enregistre_at).toLocaleString('fr-FR')}</td>
+      <td><button class="del-btn" onclick="deleteResa(${r.id})">Supprimer</button></td>
+    </tr>`).join('')}
+  </tbody></table>`;
+}
+
+async function deleteResa(id) {
+  if(!confirm('Supprimer cette réservation ?'))return;
+  try {
+    await dbDelete(id);
+    reservations = await dbGet();
+    renderAdmin();
+    renderMotos();
+    showToast('Réservation supprimée','error');
+  } catch(e) {
+    showToast('⚠ Erreur lors de la suppression','error');
+  }
+}
+
+function exportCSV() {
+  const h=['Moto','Créneau','Prénom','Nom','Téléphone','Email','Catégorie permis','Date obtention','Enregistré le'];
+  const rows=reservations.map(r=>[
+    r.moto_label,
+    r.creneau==='matin'?'Matin (09h-11h)':'Après-midi (14h-16h)',
+    r.prenom,r.nom,r.tel,r.email,r.permis||'',
+    r.date_permis ? new Date(r.date_permis).toLocaleDateString('fr-FR') : '',
+    new Date(r.enregistre_at).toLocaleString('fr-FR')
+  ]);
+  const csv=[h,...rows].map(r=>r.map(v=>`"${v}"`).join(';')).join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='reservations_extremewest.csv'; a.click();
+}
+
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)closeOverlays();}));
+
+// DÉMARRAGE
+init();
+</script>
+</body>
+</html>
